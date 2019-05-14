@@ -25,5 +25,5 @@ task clean(type: Delete) {
 }
 
 ext {
-    roomVersion = '1.0.0-beta02'
+    roomVersion = '1.1.1'
 }
