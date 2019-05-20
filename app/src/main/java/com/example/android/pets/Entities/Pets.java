@@ -1,6 +1,5 @@
 package com.example.android.pets.Entities;
 
-import android.arch.persistence.room.ColumnInfo;
 import android.arch.persistence.room.Entity;
 import android.arch.persistence.room.PrimaryKey;
 
@@ -8,27 +7,18 @@ import android.arch.persistence.room.PrimaryKey;
 public class Pets {
 
     @PrimaryKey(autoGenerate = true)
-    private String _id;
-
-
-    @ColumnInfo(name = "name")
+    private String id;
     private String name;
-
-    @ColumnInfo(name = "breed")
     private String breed;
-
-    @ColumnInfo(name = "gender")
     private String gender;
-
-    @ColumnInfo(name = "weight")
     private String weight;
 
     public String getId() {
-        return _id;
+        return id;
     }
 
-    public void setId(String _id) {
-        this._id = _id;
+    public void setId(String id) {
+        this.id = id;
     }
 
     public String getName() {

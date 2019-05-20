@@ -23,6 +23,9 @@ import android.widget.ListView;
 import com.example.android.pets.data.PetContract;
 import com.example.android.pets.data.PetContract.PetEntry;
 
+import butterknife.BindView;
+import butterknife.ButterKnife;
+
 /**
  * Displays list of pets that were entered and stored in the app.
  */
@@ -30,15 +33,18 @@ public class CatalogActivity extends AppCompatActivity implements LoaderManager.
 
     private static final int PET_LOADER = 0;
 
+    @BindView(R.id.fab) FloatingActionButton fab;
+    @BindView(R.id.list) ListView petListView;
+    @BindView(R.id.empty_view) View emptyView;
+
     PetCursorAdapter adapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_catalog);
+        ButterKnife.bind(this);
 
-        // Setup FAB to open EditorActivity
-        FloatingActionButton fab = findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -47,11 +53,6 @@ public class CatalogActivity extends AppCompatActivity implements LoaderManager.
             }
         });
 
-        // Find the ListView which will be populated with the pet data
-        ListView petListView = findViewById(R.id.list);
-
-        // Find and set empty view on the ListView, so that it only shows when the list has 0 items.
-        View emptyView = findViewById(R.id.empty_view);
         petListView.setEmptyView(emptyView);
 
         adapter = new PetCursorAdapter(this, null);
