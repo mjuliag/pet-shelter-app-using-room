@@ -15,6 +15,7 @@
  */
 package com.example.android.pets;
 
+import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.LoaderManager;
 import android.content.ContentValues;
@@ -25,8 +26,6 @@ import android.content.Loader;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
-import androidx.core.app.NavUtils;
-import androidx.appcompat.app.AppCompatActivity;
 import android.text.TextUtils;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -38,6 +37,9 @@ import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.Toast;
 
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.NavUtils;
+
 import com.example.android.pets.data.PetContract.PetEntry;
 
 /**
@@ -45,6 +47,18 @@ import com.example.android.pets.data.PetContract.PetEntry;
  */
 public class EditorActivity extends AppCompatActivity implements
         LoaderManager.LoaderCallbacks<Cursor> {
+
+    public static void start(Activity activity) {
+        startWith(activity, null);
+    }
+
+    public static void startWith(Activity activity, Uri data) {
+        Intent intent = new Intent(activity, EditorActivity.class);
+        if (data != null) {
+            intent.setData(data);
+        }
+        activity.startActivity(intent);
+    }
 
     /**
      * Identifier for the pet data loader
