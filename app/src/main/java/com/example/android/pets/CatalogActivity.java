@@ -5,7 +5,6 @@ import android.app.LoaderManager;
 import android.content.ContentUris;
 import android.content.ContentValues;
 import android.content.CursorLoader;
-import android.content.Intent;
 import android.content.Loader;
 import android.database.Cursor;
 import android.net.Uri;
@@ -44,10 +43,7 @@ public class CatalogActivity extends AppCompatActivity implements LoaderManager.
         setContentView(R.layout.activity_catalog);
         ButterKnife.bind(this);
 
-        fab.setOnClickListener(view -> {
-            Intent intent = new Intent(CatalogActivity.this, EditorActivity.class);
-            startActivity(intent);
-        });
+        fab.setOnClickListener(view -> EditorActivity.start(this));
 
         petListView.setEmptyView(emptyView);
 
@@ -55,13 +51,8 @@ public class CatalogActivity extends AppCompatActivity implements LoaderManager.
         petListView.setAdapter(adapter);
 
         petListView.setOnItemClickListener((adapterView, view, position, id) -> {
-            Intent intent = new Intent(CatalogActivity.this, EditorActivity.class);
-
             Uri currentPetUri = ContentUris.withAppendedId(PetEntry.CONTENT_URI, id);
-
-            intent.setData(currentPetUri);
-
-            startActivity(intent);
+            EditorActivity.startWith(this, currentPetUri);
         });
 
         //Kick off the loader
