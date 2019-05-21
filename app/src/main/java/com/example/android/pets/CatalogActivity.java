@@ -5,23 +5,22 @@ import android.app.LoaderManager;
 import android.content.ContentUris;
 import android.content.ContentValues;
 import android.content.CursorLoader;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.Loader;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
-import com.google.android.material.floatingactionbutton.FloatingActionButton;
-import androidx.appcompat.app.AppCompatActivity;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.AdapterView;
 import android.widget.ListView;
+
+import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.android.pets.data.PetContract;
 import com.example.android.pets.data.PetContract.PetEntry;
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -45,12 +44,9 @@ public class CatalogActivity extends AppCompatActivity implements LoaderManager.
         setContentView(R.layout.activity_catalog);
         ButterKnife.bind(this);
 
-        fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent intent = new Intent(CatalogActivity.this, EditorActivity.class);
-                startActivity(intent);
-            }
+        fab.setOnClickListener(view -> {
+            Intent intent = new Intent(CatalogActivity.this, EditorActivity.class);
+            startActivity(intent);
         });
 
         petListView.setEmptyView(emptyView);
@@ -58,17 +54,14 @@ public class CatalogActivity extends AppCompatActivity implements LoaderManager.
         adapter = new PetCursorAdapter(this, null);
         petListView.setAdapter(adapter);
 
-        petListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> adapterView, View view, int position, long id) {
-                Intent intent = new Intent(CatalogActivity.this, EditorActivity.class);
+        petListView.setOnItemClickListener((adapterView, view, position, id) -> {
+            Intent intent = new Intent(CatalogActivity.this, EditorActivity.class);
 
-                Uri currentPetUri = ContentUris.withAppendedId(PetEntry.CONTENT_URI, id);
+            Uri currentPetUri = ContentUris.withAppendedId(PetEntry.CONTENT_URI, id);
 
-                intent.setData(currentPetUri);
+            intent.setData(currentPetUri);
 
-                startActivity(intent);
-            }
+            startActivity(intent);
         });
 
         //Kick off the loader
@@ -152,19 +145,15 @@ public class CatalogActivity extends AppCompatActivity implements LoaderManager.
         // for the postivie and negative buttons on the dialog.
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setMessage(R.string.delete_all_pets_dialog_msg);
-        builder.setPositiveButton(R.string.delete, new DialogInterface.OnClickListener() {
-            public void onClick(DialogInterface dialog, int id) {
-                // User clicked the "Delete" button, so delete the pet.
-                deleteAllPets();
-            }
+        builder.setPositiveButton(R.string.delete, (dialog, id) -> {
+            // User clicked the "Delete" button, so delete the pet.
+            deleteAllPets();
         });
-        builder.setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
-            public void onClick(DialogInterface dialog, int id) {
-                // User clicked the "Cancel" button, so dismiss the dialog
-                // and continue editing the pet.
-                if (dialog != null) {
-                    dialog.dismiss();
-                }
+        builder.setNegativeButton(R.string.cancel, (dialog, id) -> {
+            // User clicked the "Cancel" button, so dismiss the dialog
+            // and continue editing the pet.
+            if (dialog != null) {
+                dialog.dismiss();
             }
         });
 
