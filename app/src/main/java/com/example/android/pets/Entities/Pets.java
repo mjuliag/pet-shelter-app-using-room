@@ -1,23 +1,23 @@
 package com.example.android.pets.Entities;
 
-import android.arch.persistence.room.Entity;
-import android.arch.persistence.room.PrimaryKey;
+import androidx.room.Entity;
+import androidx.room.PrimaryKey;
 
 @Entity(tableName = "pets")
 public class Pets {
 
     @PrimaryKey(autoGenerate = true)
-    private String id;
+    private long id;
     private String name;
     private String breed;
     private String gender;
     private String weight;
 
-    public String getId() {
+    public long getId() {
         return id;
     }
 
-    public void setId(String id) {
+    public void setId(long id) {
         this.id = id;
     }
 
