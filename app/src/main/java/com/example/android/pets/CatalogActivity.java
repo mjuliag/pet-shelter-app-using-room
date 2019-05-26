@@ -17,6 +17,8 @@ import android.widget.ListView;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.example.android.pets.Contracts.CatalogContract;
+import com.example.android.pets.Entities.Pets;
 import com.example.android.pets.data.PetContract;
 import com.example.android.pets.data.PetContract.PetEntry;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
@@ -27,7 +29,7 @@ import butterknife.ButterKnife;
 /**
  * Displays list of pets that were entered and stored in the app.
  */
-public class CatalogActivity extends AppCompatActivity implements LoaderManager.LoaderCallbacks<Cursor> {
+public class CatalogActivity extends AppCompatActivity implements LoaderManager.LoaderCallbacks<Cursor>, CatalogContract.View {
 
     private static final int PET_LOADER = 0;
 
@@ -151,5 +153,20 @@ public class CatalogActivity extends AppCompatActivity implements LoaderManager.
         // Create and show the AlertDialog
         AlertDialog alertDialog = builder.create();
         alertDialog.show();
+    }
+
+    @Override
+    public void showPets() {
+
+    }
+
+    @Override
+    public void editPet(Pets pet) {
+
+    }
+
+    @Override
+    public void createPet() {
+
     }
 }
