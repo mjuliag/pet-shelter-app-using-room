@@ -15,7 +15,7 @@ import java.util.List;
 
 public class PetAdapter extends RecyclerView.Adapter<PetAdapter.CustomViewHolder> {
 
-    private List<Pets> pet;
+    private List<Pets> pets;
 
     @NonNull
     @Override
@@ -29,23 +29,28 @@ public class PetAdapter extends RecyclerView.Adapter<PetAdapter.CustomViewHolder
     @Override
     public void onBindViewHolder(@NonNull PetAdapter.CustomViewHolder holder, int position) {
 
-        Pets pet = this.pet.get(position);
+        Pets pet = pets.get(position);
 
         String petBreed = pet.getBreed();
 
         holder.name.setText(pet.getName());
-        holder.summary.setText(pet.getBreed());
 
         // If the pet breed is empty string or null, then use some default text
         // that says "Unknown breed", so the TextView isn't blank.
         if (TextUtils.isEmpty(petBreed)) {
             holder.summary.setText(R.string.unknown_breed);
+        } else {
+            holder.summary.setText(petBreed);
         }
     }
 
     @Override
     public int getItemCount() {
-        return pet == null ? 0 : pet.size();
+        return pets == null ? 0 : pets.size();
+    }
+
+    public void setPets(List<Pets> pets) {
+        this.pets = pets;
     }
 
     class CustomViewHolder extends RecyclerView.ViewHolder {
