@@ -1,12 +1,8 @@
 package com.example.android.pets;
 
 import android.app.AlertDialog;
-import android.app.LoaderManager;
 import android.content.ContentUris;
 import android.content.ContentValues;
-import android.content.CursorLoader;
-import android.content.Loader;
-import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
@@ -19,7 +15,6 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.android.pets.Contracts.CatalogContract;
 import com.example.android.pets.Entities.Pets;
-import com.example.android.pets.data.PetContract;
 import com.example.android.pets.data.PetContract.PetEntry;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
@@ -29,9 +24,7 @@ import butterknife.ButterKnife;
 /**
  * Displays list of pets that were entered and stored in the app.
  */
-public class CatalogActivity extends AppCompatActivity implements LoaderManager.LoaderCallbacks<Cursor>, CatalogContract.View {
-
-    private static final int PET_LOADER = 0;
+public class CatalogActivity extends AppCompatActivity implements CatalogContract.View {
 
     @BindView(R.id.fab) FloatingActionButton fab;
     @BindView(R.id.list) ListView petListView;
@@ -57,8 +50,7 @@ public class CatalogActivity extends AppCompatActivity implements LoaderManager.
             EditorActivity.startWith(this, currentPetUri);
         });
 
-        //Kick off the loader
-        getLoaderManager().initLoader(PET_LOADER, null, this);
+        new PetsSqlLiteService(getLoaderManager(), this, getContentResolver()).getPets(null);
     }
 
     @Override
@@ -100,32 +92,6 @@ public class CatalogActivity extends AppCompatActivity implements LoaderManager.
                 return true;
         }
         return super.onOptionsItemSelected(item);
-    }
-
-    @Override
-    public Loader<Cursor> onCreateLoader(int loaderId, Bundle bundle) {
-        String[] projection = {
-                PetEntry._ID,
-                PetEntry.COLUMN_PET_NAME,
-                PetEntry.COLUMN_PET_BREED};
-
-        return new CursorLoader(
-                this,
-                PetContract.PetEntry.CONTENT_URI,
-                projection,
-                null,
-                null,
-                null);
-    }
-
-    @Override
-    public void onLoadFinished(Loader<Cursor> loader, Cursor data) {
-        adapter.swapCursor(data);
-    }
-
-    @Override
-    public void onLoaderReset(Loader<Cursor> loader) {
-        adapter.swapCursor(null);
     }
 
     private void deleteAllPets() {
