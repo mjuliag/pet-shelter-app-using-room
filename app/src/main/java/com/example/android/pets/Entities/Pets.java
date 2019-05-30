@@ -5,6 +5,7 @@ import android.database.Cursor;
 import androidx.room.Entity;
 import androidx.room.PrimaryKey;
 
+import com.example.android.pets.PetGender;
 import com.example.android.pets.data.PetContract;
 
 import java.util.ArrayList;
@@ -24,8 +25,8 @@ public class Pets {
                     int weightColumnIndex = cursor.getColumnIndex(PetContract.PetEntry.COLUMN_PET_WEIGHT);
                     Pets pet = new Pets(cursor.getString(nameColumnIndex),
                             cursor.getString(breedColumnIndex),
-                            cursor.getString(genderColumnIndex),
-                            cursor.getString(weightColumnIndex));
+                            cursor.getInt(genderColumnIndex),
+                            cursor.getInt(weightColumnIndex));
                     pets.add(pet);
                 } while (cursor.moveToNext());
             }
@@ -37,10 +38,10 @@ public class Pets {
     private long id;
     private String name;
     private String breed;
-    private String gender;
-    private String weight;
+    private Integer gender;
+    private Integer weight;
 
-    public Pets(String name, String breed, String gender, String weight) {
+    public Pets(String name, String breed, Integer gender, Integer weight) {
         this.name = name;
         this.breed = breed;
         this.gender = gender;
@@ -71,19 +72,27 @@ public class Pets {
         this.breed = breed;
     }
 
-    public String getGender() {
+    public Integer getGender() {
         return gender;
     }
 
-    public void setGender(String gender) {
+    public void setGender(Integer gender) {
         this.gender = gender;
     }
 
-    public String getWeight() {
+    public PetGender getGenderEnum() {
+        return PetGender.values()[gender];
+    }
+
+    public void setGenderEnum(PetGender gender) {
+        this.gender = gender.ordinal();
+    }
+
+    public Integer getWeight() {
         return weight;
     }
 
-    public void setWeight(String weight) {
+    public void setWeight(Integer weight) {
         this.weight = weight;
     }
 }
