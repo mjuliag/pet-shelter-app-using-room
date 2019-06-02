@@ -1,22 +1,23 @@
 package com.example.android.pets;
 
 import android.app.AlertDialog;
-import android.content.ContentUris;
 import android.content.ContentValues;
-import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.ListView;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.android.pets.Contracts.CatalogContract;
 import com.example.android.pets.Entities.Pets;
+import com.example.android.pets.Presenters.CatalogPresenter;
 import com.example.android.pets.data.PetContract.PetEntry;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
+
+import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -26,11 +27,16 @@ import butterknife.ButterKnife;
  */
 public class CatalogActivity extends AppCompatActivity implements CatalogContract.View {
 
-    @BindView(R.id.fab) FloatingActionButton fab;
-    @BindView(R.id.list) ListView petListView;
-    @BindView(R.id.empty_view) View emptyView;
+    @BindView(R.id.fab)
+    FloatingActionButton fab;
+    @BindView(R.id.list)
+    RecyclerView petListView;
+    @BindView(R.id.empty_view)
+    View emptyView;
 
-    PetCursorAdapter adapter;
+    PetAdapter adapter;
+
+    CatalogContract.Presenter presenter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -40,22 +46,20 @@ public class CatalogActivity extends AppCompatActivity implements CatalogContrac
 
         fab.setOnClickListener(view -> EditorActivity.start(this));
 
-        petListView.setEmptyView(emptyView);
+        //petListView.setEmptyView(emptyView);
 
-        adapter = new PetCursorAdapter(this, null);
+        adapter = new PetAdapter();
         petListView.setAdapter(adapter);
 
-        petListView.setOnItemClickListener((adapterView, view, position, id) -> {
-            Uri currentPetUri = ContentUris.withAppendedId(PetEntry.CONTENT_URI, id);
-            EditorActivity.startWith(this, currentPetUri);
-        });
+//        petListView.setOnItemClickListener((adapterView, view, position, id) -> {
+//            Uri currentPetUri = ContentUris.withAppendedId(PetEntry.CONTENT_URI, id);
+//            EditorActivity.startWith(this, currentPetUri);
+//        });
 
-        new PetsSqlLiteService(getLoaderManager(), this, getContentResolver()).getPets(null);
-    }
+        PetsRepository petsRepository = new PetsSqlLiteService(getLoaderManager(), this, getContentResolver());
 
-    @Override
-    protected void onStart() {
-        super.onStart();
+        presenter = new CatalogPresenter(this, petsRepository);
+        presenter.getPets();
     }
 
     private void insertPet() {
@@ -122,7 +126,9 @@ public class CatalogActivity extends AppCompatActivity implements CatalogContrac
     }
 
     @Override
-    public void showPets() {
+    public void showPets(List<Pets> pets) {
+
+        adapter.setPets(pets);
 
     }
 

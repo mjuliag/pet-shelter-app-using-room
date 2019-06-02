@@ -7,19 +7,19 @@ import android.content.CursorLoader;
 import android.content.Loader;
 import android.database.Cursor;
 import android.os.Bundle;
-import android.util.Log;
 
 import com.example.android.pets.Entities.Pets;
 import com.example.android.pets.data.PetContract;
 
 import java.util.List;
 
-public class PetsSqlLiteService implements LoaderManager.LoaderCallbacks<Cursor> {
+public class PetsSqlLiteService implements PetsRepository, LoaderManager.LoaderCallbacks<Cursor> {
 
     private static final int PET_LOADER = 0;
     private LoaderManager loaderManager;
     private Context context;
     private ContentResolver contentResolver;
+    private Callback<List<Pets>> callback;
 
     public PetsSqlLiteService(LoaderManager loaderManager, Context context, ContentResolver contentResolver) {
         this.loaderManager = loaderManager;
@@ -27,8 +27,10 @@ public class PetsSqlLiteService implements LoaderManager.LoaderCallbacks<Cursor>
         this.contentResolver = contentResolver;
     }
 
-    public void getPets(Callback<List<Pets>> pets) {
+    @Override
+    public void getPets(Callback<List<Pets>> callback) {
 
+        this.callback = callback;
         loaderManager.initLoader(PET_LOADER, null, this);
 
     }
@@ -38,7 +40,9 @@ public class PetsSqlLiteService implements LoaderManager.LoaderCallbacks<Cursor>
         String[] projection = {
                 PetContract.PetEntry._ID,
                 PetContract.PetEntry.COLUMN_PET_NAME,
-                PetContract.PetEntry.COLUMN_PET_BREED};
+                PetContract.PetEntry.COLUMN_PET_BREED,
+                PetContract.PetEntry.COLUMN_PET_GENDER,
+                PetContract.PetEntry.COLUMN_PET_WEIGHT};
 
         return new CursorLoader(
                 context,
@@ -52,7 +56,7 @@ public class PetsSqlLiteService implements LoaderManager.LoaderCallbacks<Cursor>
     @Override
     public void onLoadFinished(Loader<Cursor> loader, Cursor cursor) {
         List<Pets> pets = Pets.with(cursor);
-        Log.d("Julia", "Pets" + pets);
+        callback.onSuccess(pets);
     }
 
     @Override

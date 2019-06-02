@@ -51,6 +51,7 @@ public class PetAdapter extends RecyclerView.Adapter<PetAdapter.CustomViewHolder
 
     public void setPets(List<Pets> pets) {
         this.pets = pets;
+        notifyDataSetChanged();
     }
 
     class CustomViewHolder extends RecyclerView.ViewHolder {
