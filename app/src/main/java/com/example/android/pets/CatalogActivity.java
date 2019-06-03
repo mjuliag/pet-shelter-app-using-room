@@ -9,6 +9,7 @@ import android.view.MenuItem;
 import android.view.View;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.android.pets.Contracts.CatalogContract;
@@ -48,6 +49,8 @@ public class CatalogActivity extends AppCompatActivity implements CatalogContrac
 
         //petListView.setEmptyView(emptyView);
 
+        petListView.setLayoutManager(new LinearLayoutManager(this));
+
         adapter = new PetAdapter();
         petListView.setAdapter(adapter);
 
@@ -60,6 +63,8 @@ public class CatalogActivity extends AppCompatActivity implements CatalogContrac
 
         presenter = new CatalogPresenter(this, petsRepository);
         presenter.getPets();
+
+        emptyView.setVisibility(View.GONE);
     }
 
     private void insertPet() {
