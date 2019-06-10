@@ -19,11 +19,13 @@ public class Pets {
         if (cursor != null) {
             if (cursor.moveToFirst()) {
                 do {
+                    int idColumnIndex = cursor.getColumnIndex(PetContract.PetEntry._ID);
                     int nameColumnIndex = cursor.getColumnIndex(PetContract.PetEntry.COLUMN_PET_NAME);
                     int breedColumnIndex = cursor.getColumnIndex(PetContract.PetEntry.COLUMN_PET_BREED);
                     int genderColumnIndex = cursor.getColumnIndex(PetContract.PetEntry.COLUMN_PET_GENDER);
                     int weightColumnIndex = cursor.getColumnIndex(PetContract.PetEntry.COLUMN_PET_WEIGHT);
-                    Pets pet = new Pets(cursor.getString(nameColumnIndex),
+                    Pets pet = new Pets(cursor.getInt(idColumnIndex),
+                            cursor.getString(nameColumnIndex),
                             cursor.getString(breedColumnIndex),
                             cursor.getInt(genderColumnIndex),
                             cursor.getInt(weightColumnIndex));
@@ -41,7 +43,8 @@ public class Pets {
     private Integer gender;
     private Integer weight;
 
-    public Pets(String name, String breed, Integer gender, Integer weight) {
+    public Pets(long id, String name, String breed, Integer gender, Integer weight) {
+        this.id = id;
         this.name = name;
         this.breed = breed;
         this.gender = gender;
