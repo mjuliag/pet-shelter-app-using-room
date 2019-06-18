@@ -2,6 +2,8 @@ package com.example.android.pets;
 
 import android.app.LoaderManager;
 import android.content.ContentResolver;
+import android.content.ContentUris;
+import android.content.ContentValues;
 import android.content.Context;
 import android.content.CursorLoader;
 import android.content.Loader;
@@ -70,12 +72,13 @@ public class PetsSqlLiteService implements PetsRepository {
     }
 
     @Override
-    public void getPet(Callback<Pets> callback, Uri data) {
+    public void getPet(Callback<Pets> callback, long id) {
         loaderManager.initLoader(PET_LOADER, null, new LoaderManager.LoaderCallbacks<Cursor>() {
 
             @Override
             public Loader<Cursor> onCreateLoader(int i, Bundle bundle) {
-                return getCursorLoader(data);
+                Uri currentPetUri = ContentUris.withAppendedId(PetContract.PetEntry.CONTENT_URI, id);
+                return getCursorLoader(currentPetUri);
             }
 
             @Override
@@ -93,6 +96,18 @@ public class PetsSqlLiteService implements PetsRepository {
 
     @Override
     public void insertPet(Callback<Boolean> callback, Pets pet) {
+
+        ContentValues values = new ContentValues();
+        values.put(PetContract.PetEntry.COLUMN_PET_NAME, "Toto");
+        values.put(PetContract.PetEntry.COLUMN_PET_BREED, "Terrier");
+        values.put(PetContract.PetEntry.COLUMN_PET_GENDER, PetContract.PetEntry.GENDER_MALE);
+        values.put(PetContract.PetEntry.COLUMN_PET_WEIGHT, 7);
+
+        contentResolver.insert(PetContract.PetEntry.CONTENT_URI, values);
+    }
+
+    @Override
+    public void updatePet(Callback<Boolean> callback, Pets pet) {
 
     }
 }

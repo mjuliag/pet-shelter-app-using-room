@@ -1,12 +1,12 @@
 package com.example.android.pets;
 
 import android.app.AlertDialog;
-import android.content.ContentValues;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -39,6 +39,8 @@ public class CatalogActivity extends AppCompatActivity implements CatalogContrac
 
     CatalogContract.Presenter presenter;
 
+    PetsRepository petsRepository;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -53,13 +55,20 @@ public class CatalogActivity extends AppCompatActivity implements CatalogContrac
 
         adapter = new PetAdapter();
         petListView.setAdapter(adapter);
+        adapter.setOnItemClickListener(new PetAdapter.OnItemClickListener() {
+            @Override
+            public void onClick(Pets pet) {
+                Toast.makeText(CatalogActivity.this, pet.getName(),
+                        Toast.LENGTH_SHORT).show();
+            }
+        });
 
 //        petListView.setOnItemClickListener((adapterView, view, position, id) -> {
 //            Uri currentPetUri = ContentUris.withAppendedId(PetEntry.CONTENT_URI, id);
 //            EditorActivity.startWith(this, currentPetUri);
 //        });
 
-        PetsRepository petsRepository = new PetsSqlLiteService(getLoaderManager(), this, getContentResolver());
+        petsRepository = new PetsSqlLiteService(getLoaderManager(), this, getContentResolver());
 
         presenter = new CatalogPresenter(this, petsRepository);
         presenter.getPets();
@@ -68,15 +77,7 @@ public class CatalogActivity extends AppCompatActivity implements CatalogContrac
     }
 
     private void insertPet() {
-
-        ContentValues values = new ContentValues();
-        values.put(PetEntry.COLUMN_PET_NAME, "Toto");
-        values.put(PetEntry.COLUMN_PET_BREED, "Terrier");
-        values.put(PetEntry.COLUMN_PET_GENDER, PetEntry.GENDER_MALE);
-        values.put(PetEntry.COLUMN_PET_WEIGHT, 7);
-
-        getContentResolver().insert(PetEntry.CONTENT_URI, values);
-
+        petsRepository.insertPet(null, null);
     }
 
     @Override

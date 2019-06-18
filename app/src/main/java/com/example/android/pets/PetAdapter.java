@@ -17,6 +17,8 @@ public class PetAdapter extends RecyclerView.Adapter<PetAdapter.CustomViewHolder
 
     private List<Pets> pets;
 
+    private OnItemClickListener onItemClickListener;
+
     @NonNull
     @Override
     public PetAdapter.CustomViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
@@ -30,6 +32,7 @@ public class PetAdapter extends RecyclerView.Adapter<PetAdapter.CustomViewHolder
     public void onBindViewHolder(@NonNull PetAdapter.CustomViewHolder holder, int position) {
 
         Pets pet = pets.get(position);
+        holder.pet = pet;
 
         String petBreed = pet.getBreed();
 
@@ -56,11 +59,22 @@ public class PetAdapter extends RecyclerView.Adapter<PetAdapter.CustomViewHolder
 
     class CustomViewHolder extends RecyclerView.ViewHolder {
         TextView name, summary;
+        Pets pet;
 
         CustomViewHolder(View view) {
             super(view);
             name = view.findViewById(R.id.name);
             summary = view.findViewById(R.id.summary);
+            view.setOnClickListener((view1 -> onItemClickListener.onClick(pet)));
         }
+    }
+
+    public interface OnItemClickListener {
+
+        void onClick(Pets pet);
+    }
+
+    public void setOnItemClickListener(OnItemClickListener onItemClickListener) {
+        this.onItemClickListener = onItemClickListener;
     }
 }
